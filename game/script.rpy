@@ -129,7 +129,7 @@ label start:
     n_xeno "Do you have what it takes?"
     menu:
         "What should I do?"
-        "I'm fine being a servant.":
+        "I'm fine being a servant...":
             jump ending_serve
         "YES YES I'LL DO IT!":
             jump g1
@@ -139,7 +139,67 @@ label g1:
     "g1"
     return
 
+label ending_good:﻿﻿﻿﻿
+    # at the dressing room
+    "You wake up and see that you are back in the dressing room."
+    "You look around, and the entire place is a mess."
+    pl "*Did we crash land here?"
+    n_star "WHERE IS MY PHONE!!!"
+    pl "Here we go again..."
+    n_star "WHY DID YOU HAVE TO PICK THE REAL ME! I LOVED IT OVER THERE!"
+    pl "Get over yourself! Don't you still want to make movies? Be seen? Your fans would have missed you!"
+    n_star "Who cares about them! My friend had an all you can eat buffet..."
+    pl "You became friends with that thing?? And you need to watch what you eat..."
+    "The Starlet begins pouting."
+    pl "Come on, stop doing that."
+    pl "What about your pet dog?"
+    n_star "FLUFFY!!! YOU'RE SO RIGHT!"
+    "The Starlet begins to cry."
+    n_star "How could I be so cruel!! I was having so much fun that I forgot about my poor baby."
+    pl "I'm sorry to cut you off, but you have been holding your phone in your hand this whole time."
+    n_star "Oh... silly me!"
+    pl "Come on and get ready!"
+    
+    # at the set
+    pl "Sir, I've brought the talent. I'm so sorry for the delay!"
+    n_director "About time! We have been waiting for hours!"
+    n_director "We are hungry, the techs are pissed, the execs are breathing down my neck!"
+    pl "..."
+    n_director "Do you have anything to say?!"
+    n_star "I was the only one that was late!"
+    n_director "Huh?"
+    n_star "You should be mad at me, sir! I was the one who dragged her out to a space ship!"
+    "The Director is visibly confused."
+    n_director "Uhh...."
+    n_director "..."
+    n_star "..."
+    n_director "Oh, how could I ever be mad at you, my dear."
+    n_star "You're so sweet!"
+    pl "..."
+    n_director "You're lucky this time. Don't disappoint me again!"
+    pl "Yes sir..."
+    "Good End. (The are 3 more endings! Replay for more!)"
+        
+    return
+
 label ending_serve:
-    "ending_serve"
+    # "ending_serve"
+    "It's a sorry sight."
+    "You ended up serving The Xeno and its ship. Your tasks involve maintance and helping it understand human langauge and culture."
+    "The Xeno studies its subjects diligently, and is quite pleased with their work."
+    "You, however, are still doing the same things you were doing back on Earth."
+    "The Starlet is perched up on her xeno-made throne, and she's staring down at her assistant."
+    n_star "It's so great here! I love it here!"
+    "You are on the floor mopping up an oil spil."
+    pl "... that's easy enough for you to say ..."
+    n_xeno "Hmm, the maid-type seems to sound angry at princess-type. But she is using neutral words. I'm gonna have to write this down."
+    n_xeno "What is this phenomenon called?"
+    pl "Don't call me a maid! And it's called sarcasm!"
+    n_xeno "Human, please refrain from yelling at me. If you don't cease this behavior, you will be made to do more work."
+    pl "Oh my days..."
+    
+    "This disfunctional crew continued on for a long time... while their friends at home were worried about them, they were in the sky, up to no good..."
+    "Bad End. (There are 3 more endings! Replay for more!)"
+    
     return
 
