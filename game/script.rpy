@@ -1,9 +1,3 @@
-﻿# The script of the game goes in this file.
-
-# Declare characters used by this game. The color argument colorizes the
-# name of the character.
-
-define e = Character("Eileen")
 
 """
 Define characters here
@@ -17,7 +11,11 @@ define n_kids = Character("Children at the Xeno Fair")
 """
 Define sprites here
 """
-
+image s_set = im.Scale("bg set.png",1920,1080)
+image s_carnival = im.Scale("bg carnival.jpg",1920,1080)
+image s_dress_door = im.Scale("bg dressing door.jpg",1920,1080)
+image s_dress_room = im.Scale("bg dressing room.jpg",1920,1080)
+image s_prison = im.Scale("bg nice prison.jpeg",1920,1080)
 """
 Game globals
 """
@@ -29,10 +27,17 @@ transform star_transform:
     xzoom -0.65
     yzoom 0.65
     ypos 200
+transform prod_transform:
+    xzoom 0.65
+    yzoom 0.65
+    xalign 0.5
+    ypos 200
 
 transform xeno_transform:
-    xzoom 0.55
-    yzoom 0.55
+    xzoom 0.60
+    yzoom 0.60
+    xalign 0.5
+    ypos 125
 
 init python:
     star_variations = ['starlet color 2 neutral', 'starlet color 3 neutral', 'starlet dress 2 neutral', 'starlet eye 2 neutral', 'starlet hairstyle 2 neutral', 'starlet hairstyle 3 neutral', 'starlet original neutral', 'starlet straps neutral']
@@ -62,8 +67,9 @@ init python:
 # The game starts here.
 
 label start:
+    
     #$ win = False
-    scene bg room
+    #scene bg room
 
     #show starlet original neutral at left:
     #    xzoom 0.65
@@ -71,7 +77,8 @@ label start:
 
     # at the set
     #replace with producer
-    show eileen happy
+    scene s_set
+    show producer neutral at prod_transform
     
     pl "Ugh.. how much longer do I have to wait! It's not like my job is on the line here!"
     
@@ -79,8 +86,10 @@ label start:
     "You wonder what led up to this to this point. This has been your life for the past several years."
     "Your job is to assist the production of movies, but it seems all you do is chores for the talent."
     
-    hide eileen happy
-    show elieen happy at left
+    hide producer neutral
+    show producer neutral at prod_transform:
+        xzoom -1
+        xalign 0
     show director at right:
         xzoom 0.65
         yzoom 0.65
@@ -89,7 +98,7 @@ label start:
 
     pl "I'm still looking-"
 
-    show bg room with hpunch
+    show s_set with hpunch
 
     n_director "NOW!!!!"
 
@@ -98,8 +107,8 @@ label start:
     hide director 
 
     # after some time
-    scene bg room with fade
-    show elieen happy
+    scene s_set with fade
+    show producer neutral at prod_transform
 
     pl "I've tried everything.. she's not at the coffee shop ..."
     pl "... not at the lounge ..."
@@ -107,8 +116,8 @@ label start:
     pl "I don't have much of a choice. Ugh, I hate going in there! She goofs around in there more than anywhere else!"
 
     # at the dressing room door
-    scene bg room with dissolve
-    show eileen happy
+    scene s_dress_door with dissolve
+    show producer neutral at prod_transform with dissolve
 
     pl "Open the door!"
     "*crickets*"
@@ -122,16 +131,16 @@ label start:
     "However, the door opens as soon as you charge, and you end up falling to the floor."
 
     # inside the dressing room
-    scene bg room 
-    show elieen happy
+    scene s_dress_room
+    show producer neutral at prod_transform
 
     pl "Ow!"
     pl "My head h-"
 
-    hide eileen happy with dissolve
+    hide producer neutral with dissolve
 
     n_unknown "Oh man. Another one."
-    show xeno neutral with fade
+    show xeno neutral at xeno_transform with fade
     "A creature is holding your lips sealed, dragging you across the floor."
     pl "Mmmm-"
     n_unknown "What a disaster. I just wanted to clean up the first mess!"
@@ -144,8 +153,8 @@ label start:
 
     # after some time
     # at the xeno prison
-    show bg room with fade
-    show eileen happy
+    show s_prison with fade
+    show producer neutral at prod_transform
 
     pl "My head hurts, again..."
     "You look at your surroundings."
@@ -156,8 +165,11 @@ label start:
     n_star "My love!!"
     pl "Huh?!"
     "The Starlet appears."
-    hide eileen happy
-    show elieen happy at right
+    hide producer neutral
+    show producer neutral:
+        xalign 0.99
+        zoom 0.75
+        ypos 200
     show starlet original neutral at left:
         xzoom -0.65
         yzoom 0.65
@@ -183,7 +195,7 @@ label start:
 
     hide starlet original neutral with dissolve
     "The Starlet bursts into a cloud of smoke..."
-
+    play music "cosmic customs.mp3" volume 0.12
     n_unknown "Well, well, well..."
     "The weird creature reappears."
     show xeno neutral at left with fade:
@@ -211,7 +223,7 @@ label start:
         "I'm fine being a servant...":
             jump ending_serve
         "YES YES I'LL DO IT!":
-            jump g1
+            jump instructions
     return
 
 label instructions:
@@ -229,8 +241,10 @@ label instructions:
             return
         "I got it.":
             scene black with fade
+            $ star_current_skin = choose_a_star()    
+            $ print(star_current_skin)
             jump g1
-            $ star_current_skin = choose_a_star()
+            
             return
     return
 
@@ -238,9 +252,11 @@ label g1:
     # Look at your inventory
     # Look at the Starlet
     # Decide
-    scene bg room with fade
+    scene s_prison
     # show the star
+    
     $ renpy.show(name=star_current_skin, at_list=[star_transform])
+    $ renpy.with_statement(fade)
     menu:
         "Look at your inventory":
             jump inventory
@@ -254,6 +270,8 @@ label g1:
 INVENTORY
 """
 label inventory:
+    scene s_prison with fade:
+        matrixcolor BrightnessMatrix(-0.3)
     menu:
         "Old Photo":
             jump oldphoto
@@ -270,6 +288,7 @@ label inventory:
     return
 
 label oldphoto:
+    show old photo
     pl "This is an old photo of The Starlet."
     pl "She always gets so flustered thinking about this time in her life."
     pl "It's almost as if she's done a full-180 since this was taken."
@@ -277,6 +296,9 @@ label oldphoto:
     jump g1
 
 label newsclipping:
+    show newsclip:
+        yalign 0.25
+        xalign 0.5
     "EXCLUSIVE INTERVIEW: The Starlet of Hollywood - Bad Blood with Co-Star?"
     "The Interviewer: I love your long, blonde hair!"
     "The Starlet: Thank you!"
@@ -287,6 +309,7 @@ label newsclipping:
     jump g1
 
 label movielist:
+    show movies
     pl "This is her list of favorite movies..."
     pl "There's no rhyme or reason for the choices on the list..."
     pl "They just seem to be all like her, blondes, in elaborate and fancy dresses."
@@ -294,6 +317,8 @@ label movielist:
     jump g1
 
 label notebook:
+    show notebook:
+        zoom 0.42
     "March XX, 20XX"
     pl "This was a while ago"
     "I cut my hair short today. NONONONO! I hated it!"
@@ -306,6 +331,9 @@ label notebook:
     jump g1
 
 label purse:
+    show purse:
+        zoom 0.75
+        xalign 0.5
     "The purse is purple."
     pl "One thing I can give her, she has a great fashion sense."
     pl "Or her assistants do. I don't know."
@@ -319,9 +347,11 @@ CLOSE UP OF THE STARLET
 label star_look:
     scene black with fade
     "Press H to show or hide the dialogue box."
-    scene bg room with fade
+    scene s_prison:
+        matrixcolor BrightnessMatrix(-0.3)
     window hide
     $ renpy.show(name=star_current_skin, at_list=[star_closeup])
+    $ renpy.with_statement(fade)
     pause 4
     "Press any key to continue"
     jump g1
@@ -341,12 +371,13 @@ label decide:
     return
 
 label reveal:
-    scene bg room with fade
+    scene s_prison with fade
     show xeno neutral at xeno_transform with fade 
     n_xeno "So, it seem's you have made your choice."
     n_xeno "..."
     n_xeno "I hope you are certain. Close your eyes."
-    scene black with fade
+    scene black with fade 
+    stop music
     python:
         if (star_current_skin == 'starlet original neutral'):
             #win = True
@@ -365,6 +396,11 @@ label ending_good:
     pl "*Did we crash land here?*"
     n_star "WHERE IS MY PHONE!!!"
     pl "Here we go again..."
+    show s_dress_room with fade
+    show producer neutral at prod_transform with dissolve:
+        xalign 0.99
+        ypos 220
+    show starlet original neutral at star_transform with dissolve
     n_star "WHY DID YOU HAVE TO PICK THE REAL ME! I LOVED IT OVER THERE!"
     pl "Get over yourself! Don't you still want to make movies? Be seen? Your fans would have missed you!"
     n_star "Who cares about them! My friend had an all you can eat buffet..."
@@ -372,6 +408,7 @@ label ending_good:
     "The Starlet begins pouting."
     pl "Come on, stop doing that."
     pl "What about your pet dog?"
+    n_star "..."
     n_star "FLUFFY!!! YOU'RE SO RIGHT!"
     "The Starlet begins to cry."
     n_star "How could I be so cruel!! I was having so much fun that I forgot about my poor baby."
@@ -380,6 +417,16 @@ label ending_good:
     pl "Come on and get ready!"
     
     # at the set
+    scene s_set with fade
+    show producer neutral at prod_transform:
+        xzoom -1
+        xalign 0.3
+        ypos 220
+    show director at right:
+        xzoom 0.65
+        yzoom 0.65
+    show starlet original neutral at star_transform with dissolve
+    
     pl "Sir, I've brought the talent. I'm so sorry for the delay!"
     n_director "About time! We have been waiting for hours!"
     n_director "We are hungry, the techs are pissed, the execs are breathing down my neck!"
@@ -402,41 +449,82 @@ label ending_good:
     return
 
 label ending_greed:
-    scene bg room with fade
+    scene s_carnival with fade
     "You wake up..."
     n_kids "Let me hit it! I'm a better shot than you!"
     pl "!!!"
+    show producer neutral at prod_transform with dissolve
     "It seems you have been strapped up to a carnival machine."
     "It seems to be a dunk tank. The children are aiming for the target."
     "After some tries, the kids hit it."
+    show producer neutral:
+        ease 1.0 yalign 5.0
     n_kids "YAY!!"
-    scene bg room with fade
+    scene s_carnival with fade
+    show producer neutral at right:
+        zoom 0.65
+    show xeno neutral at xeno_transform:
+        xalign 0.0
     pl "What the..."
     n_xeno "How do you like your new job?"
     pl "It's certainly different..."
-    n_xeno "I figured this is the best position from you. It doesn't seem you are capable of intelligent thought."
+    n_xeno "I figured this is the best position for you. It doesn't seem you are capable of intelligent thought."
     n_xeno "However, you are an exotic creature and that is drawing a lot of attention for our carnival."
     pl "..."
     n_xeno "Don't worry, you'll be compensated. We will also take care of your friend as well."
     pl "Where is she?!? You didn't hurt her, did you?"
+    show starlet original neutral at star_transform:
+        xalign 0.6
     n_star "Yoohoo! You don't look to great."
     pl "On second thought, I don't care anymore."
     "Bad End. (There are 3 more endings! Replay for more!)"
     return
 
 label ending_study:
+    show s_set with fade
+    show producer neutral at prod_transform:
+        xzoom -1
+        xalign 0.0
+        ypos 220
+    show xeno neutral at xeno_transform:
+        xalign 0.3
+    "You and The Xeno watch from afar."
+    "She's tasked you to make critical observations of the human species."
+    show director at right:
+        zoom 0.65
+        xzoom -1.0
+    n_director "No, you can't be serious."
+    n_director "..."
+    n_xeno "What is this man holding in his hands?"
+    pl "It's a phone."
+    n_xeno "What is he doing with it? Why is he yelling at it?"
+    pl "Uhh... he's calling someone, and he seems to be angry at them."
+    n_director "NO! Give me one more day-"
+    n_director "GRRRR!! I'm so gonna fire that useless Producer! She can't do anything right!"
+    pl "*sigh*"
+    "Bad End. (There are 3 more endings! Replay for more!)"
     return
 
 label ending_serve:
     # "ending_serve"
+    stop music
+    hide producer neutral
+    hide xeno neutral
+    show s_prison with fade
     "It's a sorry sight."
     "You ended up serving The Xeno and its ship. Your tasks involve maintance and helping it understand human langauge and culture."
     "The Xeno studies its subjects diligently, and is quite pleased with their work."
     "You, however, are still doing the same things you were doing back on Earth."
     "The Starlet is perched up on her xeno-made throne, and she's staring down at her assistant."
+    show starlet original neutral at star_transform
+    show producer neutral:
+        xalign 0.99
+        zoom 0.75
+        ypos 200
     n_star "It's so great here! I love it here!"
     "You are on the floor mopping up an oil spil."
     pl "... that's easy enough for you to say ..."
+    show xeno neutral at xeno_transform
     n_xeno "Hmm, the maid-type seems to sound angry at princess-type. But she is using neutral words. I'm gonna have to write this down."
     n_xeno "What is this phenomenon called?"
     pl "Don't call me a maid! And it's called sarcasm!"
