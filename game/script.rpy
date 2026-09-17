@@ -13,7 +13,7 @@ define n_star = Character("The Starlet")
 define n_xeno = Character("The Xeno")
 define n_unknown = Character("???")
 define n_director = Character("The Director")
-
+define n_kids = Character("Children at the Xeno Fair")
 """
 Define sprites here
 """
@@ -40,6 +40,7 @@ init python:
     star_current_index = -1
     star_rotations = 0
     star_current_skin = 'starlet original neutral'
+    #win = False
     from random import choice
     def f():
         if len(star_variations) == len(star_current_order):
@@ -61,6 +62,7 @@ init python:
 # The game starts here.
 
 label start:
+    #$ win = False
     scene bg room
 
     #show starlet original neutral at left:
@@ -339,10 +341,24 @@ label decide:
     return
 
 label reveal:
-    #determine ending
+    scene bg room with fade
+    show xeno neutral at xeno_transform with fade 
+    n_xeno "So, it seem's you have made your choice."
+    n_xeno "..."
+    n_xeno "I hope you are certain. Close your eyes."
+    scene black with fade
+    python:
+        if (star_current_skin == 'starlet original neutral'):
+            #win = True
+            renpy.jump("ending_good")
+        else:
+            if star_rotations <= 2:
+                renpy.jump("ending_greed")
+            else:
+                renpy.jump("ending_study")
     return
 
-label good_ending:
+label ending_good:
     # at the dressing room
     "You wake up and see that you are back in the dressing room."
     "You look around, and the entire place is a mess."
@@ -383,6 +399,32 @@ label good_ending:
     pl "Yes sir..."
     "Good End. (The are 3 more endings! Replay for more!)"
         
+    return
+
+label ending_greed:
+    scene bg room with fade
+    "You wake up..."
+    n_kids "Let me hit it! I'm a better shot than you!"
+    pl "!!!"
+    "It seems you have been strapped up to a carnival machine."
+    "It seems to be a dunk tank. The children are aiming for the target."
+    "After some tries, the kids hit it."
+    n_kids "YAY!!"
+    scene bg room with fade
+    pl "What the..."
+    n_xeno "How do you like your new job?"
+    pl "It's certainly different..."
+    n_xeno "I figured this is the best position from you. It doesn't seem you are capable of intelligent thought."
+    n_xeno "However, you are an exotic creature and that is drawing a lot of attention for our carnival."
+    pl "..."
+    n_xeno "Don't worry, you'll be compensated. We will also take care of your friend as well."
+    pl "Where is she?!? You didn't hurt her, did you?"
+    n_star "Yoohoo! You don't look to great."
+    pl "On second thought, I don't care anymore."
+    "Bad End. (There are 3 more endings! Replay for more!)"
+    return
+
+label ending_study:
     return
 
 label ending_serve:
