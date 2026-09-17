@@ -139,7 +139,7 @@ label g1:
     "g1"
     return
 
-label ending_good:﻿﻿﻿﻿
+label good_ending:
     # at the dressing room
     "You wake up and see that you are back in the dressing room."
     "You look around, and the entire place is a mess."
